@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,4 @@ public class Category
     //TODO
     // delete_flag
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> product;
 }

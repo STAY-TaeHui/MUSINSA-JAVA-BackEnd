@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.musinsabackend.domain.dto.ProductDto;
 
 @Entity
 @Getter
@@ -22,9 +23,6 @@ public class Product
     @Column(name = "product_id", nullable = false)
     private Long id;
 
-    @Column(name = "product_name", nullable = false)
-    private String name;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
@@ -33,6 +31,11 @@ public class Product
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "product_price", nullable = false)
     private int price;
+
+    public ProductDto toDto()
+    {
+        return new ProductDto(id, price);
+    }
 }
