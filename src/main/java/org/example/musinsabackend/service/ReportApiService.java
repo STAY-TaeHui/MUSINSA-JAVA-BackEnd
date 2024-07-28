@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.example.musinsabackend.api.dto.ProductInfoWithBrandApi;
+import org.example.musinsabackend.api.dto.LowestBrandInfoDto;
+import org.example.musinsabackend.api.dto.LowestBrandProductInfoDto;
+import org.example.musinsabackend.api.dto.ProductPriceAndBrandNameDto;
+import org.example.musinsabackend.api.dto.ProductInfoWithBrandApiResponse;
 import org.example.musinsabackend.domain.Category;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +24,38 @@ public class ReportApiService
 
         int totalPrice = 0;
         List<Category> categories = categoryService.getCategories();
-        List<ProductInfoWithBrandApi> lowestPriceProducts  = new ArrayList<>();
+        List<ProductPriceAndBrandNameDto> lowestPriceProducts  = new ArrayList<>();
 
         for (Category category : categories)
         {
-            ProductInfoWithBrandApi lowestPriceProductByCategoryId = productService.getLowestPriceProductByCategoryId(category);
+            ProductPriceAndBrandNameDto lowestPriceProductByCategoryId = productService.getLowestPriceProductByCategoryId(category.getId());
             lowestPriceProducts.add(lowestPriceProductByCategoryId);
 
             totalPrice += lowestPriceProductByCategoryId.getPrice();
         }
 
         return totalPrice;
-
-
         // 해당 상품의 브랜드와 상품 가격, 총액을 조회
+    }
+
+    public LowestBrandInfoDto getLowestPriceBrand()
+    {
+        LowestBrandInfoDto lowestBrandInfoDto = productService.getLowestPriceBrandByBrandId();
+
+        List<LowestBrandProductInfoDto> lowestBrandProductInfoDtos = productService.getProductInfoByBrandId(lowestBrandInfoDto.getBrandId());
+
+        lowestBrandInfoDto.addAllLowestBrandProductInfoDtos(lowestBrandProductInfoDtos);
+
+        return lowestBrandInfoDto;
+    }
+
+    //카테고리 이름으로 최저 가격의 상품과 최고 가격의 상품을 조회하는 기능
+    public void LowestAndHighestPriceProductByCategoryName(String categoryName)
+    {
+        ProductInfoWithBrandApiResponse productPriceAndBrandNameDto = productService.getLowestPriceProductByCategoryName(categoryName);
+
 
     }
+
+
 }
