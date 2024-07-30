@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.example.musinsabackend.api.dto.LowestBrandProductInfoDto;
 import org.example.musinsabackend.api.dto.ProductPriceAndBrandNameDto;
 import org.example.musinsabackend.domain.Brand;
-import org.example.musinsabackend.domain.Category;
 import org.example.musinsabackend.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +13,7 @@ import org.springframework.lang.NonNull;
 
 public interface ProductJpaRepository extends JpaRepository<Product, Long>
 {
-    Optional<Product> findTopByCategoryOrderByPrice(Category category);
+    Optional<Product> findTopByCategory_IdOrderByPrice(Long categoryId);
 
 
     @Query("SELECT p.brand " +

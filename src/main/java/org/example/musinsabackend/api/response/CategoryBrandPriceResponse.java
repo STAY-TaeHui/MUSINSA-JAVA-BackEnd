@@ -13,12 +13,12 @@ import org.example.musinsabackend.api.dto.ProductInfoDto;
 @AllArgsConstructor
 public class CategoryBrandPriceResponse
 {
-    List<ProductInfoDto> productInfo;
+    List<ProductInfoDto> productInfos;
     private int totalPrice;
 
-    public CategoryBrandPriceResponse(int totalPrice, List<ProductInfoDto> productInfo)
+    public CategoryBrandPriceResponse(int totalPrice, List<ProductInfoDto> productInfos)
     {
-        this.productInfo = new ArrayList<>(productInfo);
+        this.productInfos = new ArrayList<>(productInfos);
         this.totalPrice = totalPrice;
     }
 }

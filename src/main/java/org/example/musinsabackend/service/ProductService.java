@@ -4,25 +4,32 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.example.musinsabackend.api.dto.LowestBrandProductInfoDto;
 import org.example.musinsabackend.api.dto.ProductInfoDto;
 import org.example.musinsabackend.api.dto.ProductPriceAndBrandNameDto;
 import org.example.musinsabackend.api.response.ProductInfoWithBrandApiResponse;
 import org.example.musinsabackend.domain.Brand;
 import org.example.musinsabackend.domain.Category;
 import org.example.musinsabackend.domain.Product;
+import org.example.musinsabackend.domain.dto.CreateProductDto;
 import org.example.musinsabackend.repository.ProductJpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class ProductService
 {
     private final ProductJpaRepository productJpaRepository;
+    private final BrandService brandService;
+    private final CategoryService categoryService;
 
     public List<Product> getProducts()
     {
         return productJpaRepository.findAll();
+    }
+
+    public Product findOne(Long id)
+    {
+        return productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
     }
 
     /*
@@ -30,15 +37,15 @@ public class ProductService
     * @param categoryId 카테고리 아이디
     * @return 가격이 가장 낮은 상품
     */
-    public ProductInfoDto getLowestPriceProductByCategory(Category category)
+    public ProductInfoDto getLowestPriceProductByCategory(Long categoryId)
     {
-        Optional<Product> product = productJpaRepository.findTopByCategoryOrderByPrice(category);
+        Optional<Product> product = productJpaRepository.findTopByCategory_IdOrderByPrice(categoryId);
         product.orElseThrow(() -> new IllegalArgumentException("해당 카테고리에 상품이 존재하지 않습니다."));
 
         return new ProductInfoDto(
             product.get().getBrand().getName(),
             product.get().getPrice(),
-            category.getName()
+            product.get().getCategory().getName()
         );
     }
 
@@ -49,17 +56,7 @@ public class ProductService
     */
     public Brand getLowestPriceBrandByBrandId()
     {
-        return productJpaRepository.findTopBrandIdByBrandIdOrderByPrice().get();
-    }
-
-    /*
-    * 브랜드 아이디로 해당 브랜드의 모든 상품 정보 조회
-    * @param brandId 브랜드 아이디
-    * @return 브랜드 아이디로 조회한 모든 상품 정보
-    * */
-    public List<LowestBrandProductInfoDto> getProductInfoByBrandId(Long brandId)
-    {
-        return productJpaRepository.findByBrand_Id(brandId).get();
+        return productJpaRepository.findTopBrandIdByBrandIdOrderByPrice().orElseThrow(() -> new RuntimeException("데이터 조회중 오류가 발생했습니다."));
     }
 
     /*
@@ -78,5 +75,54 @@ public class ProductService
             lowestPriceProducts.orElse(null),
             highestPriceProducts.orElse(null)
         );
+    }
+
+    /*
+    * 상품 생성
+    * @param createProductDto 생성할 상품 정보
+    * @return 생성된 상품의 아이디
+    * */
+    public Long createProduct(CreateProductDto createProductDto)
+    {
+        Brand brand = brandService.findOne(createProductDto.getBrandId());
+        Category category = categoryService.findOne(createProductDto.getCategoryId());
+
+        Product savedProduct = productJpaRepository.save(
+            Product.createProduct(brand, category, createProductDto.getPrice())
+        );
+        brand.addProducts(savedProduct);
+
+        return savedProduct.getId();
+    }
+
+    /*
+    * 상품 삭제
+    * @param id 삭제할 상품 아이디
+    * @return 삭제된 상품의 아이디
+    * */
+    public Long deleteProduct(Long id)
+    {
+        Product product = productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+        productJpaRepository.deleteById(id);
+
+        return product.getId();
+    }
+
+    /*
+    * 상품 수정
+    * @param id 수정할 상품 아이디
+    * @param dto 수정할 상품 정보
+    * @return 수정된 상품의 아이디
+    * */
+    public Long updateProduct(Long id, CreateProductDto dto)
+    {
+        Product product = productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+
+        Brand brand = brandService.findOne(dto.getBrandId());
+        Category category = categoryService.findOne(dto.getCategoryId());
+
+        product.updateProduct(brand, category, dto.getPrice());
+
+        return product.getId();
     }
 }

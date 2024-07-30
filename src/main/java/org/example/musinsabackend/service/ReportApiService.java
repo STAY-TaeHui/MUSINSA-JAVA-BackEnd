@@ -32,7 +32,7 @@ public class ReportApiService
 
         for (Category category : categories)
         {
-            ProductInfoDto productInfoDto = productService.getLowestPriceProductByCategory(category);
+            ProductInfoDto productInfoDto = productService.getLowestPriceProductByCategory(category.getId());
             productInfos.add(productInfoDto);
 
             totalPrice += productInfoDto.getPrice();

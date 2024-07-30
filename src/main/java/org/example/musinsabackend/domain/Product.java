@@ -9,17 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.musinsabackend.domain.dto.ProductDto;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id", nullable = false)
     private Long id;
 
@@ -37,5 +38,24 @@ public class Product
     public ProductDto toDto()
     {
         return new ProductDto(id, price);
+    }
+
+    public static Product createProduct(Brand brand, Category category, int price)
+    {
+        Product product = new Product();
+        product.brand = brand;
+        product.category = category;
+        product.price = price;
+
+        brand.addProducts(product);
+
+        return product;
+    }
+
+    public void updateProduct(Brand brand, Category category, int price)
+    {
+        this.brand = brand;
+        this.category = category;
+        this.price = price;
     }
 }
