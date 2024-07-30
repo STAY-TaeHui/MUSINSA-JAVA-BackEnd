@@ -61,7 +61,7 @@ class BrandServiceTest
         createBrandDto.setBrandName("Nike");
         Long createdBrandId = brandService.createBrand(createBrandDto);
 
-        Brand brand = brandService.findOne(createdBrandId);
+        Brand brand = brandService.findEntity(createdBrandId);
 
         assertNotNull(brand);
         assertEquals("Nike", brand.getName());
@@ -82,7 +82,7 @@ class BrandServiceTest
     @DisplayName("브랜드 조회 테스트 - 모든 브랜드 조회")
     @Test
     void getAllBrands_returnsAllBrands() {
-        List<Brand> allBrands = brandService.getAllBrands();
+        List<BrandDto> allBrands = brandService.getAllBrands();
 
         allBrands.size();
 

@@ -106,9 +106,9 @@ class ProductServiceTest
     @Test
     @Transactional
     void getLowestPriceProductByCategoryId_NoProductFound() {
-        when(productJpaRepository.findTopByCategory_IdOrderByPrice(1L)).thenReturn(Optional.empty());
+        when(productJpaRepository.findTopByCategory_IdOrderByPrice(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> productService.getLowestPriceProductByCategory(1L))
+        assertThatThrownBy(() -> productService.getLowestPriceProductByCategory(999L))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("해당 카테고리에 상품이 존재하지 않습니다.");
     }
