@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.example.musinsabackend.api.dto.LowestBrandInfoDto;
 import org.example.musinsabackend.api.dto.LowestBrandProductInfoDto;
+import org.example.musinsabackend.api.dto.ProductInfoDto;
 import org.example.musinsabackend.api.dto.ProductPriceAndBrandNameDto;
-import org.example.musinsabackend.api.dto.ProductInfoWithBrandApiResponse;
+import org.example.musinsabackend.api.response.ProductInfoWithBrandApiResponse;
+import org.example.musinsabackend.domain.Brand;
+import org.example.musinsabackend.domain.Category;
 import org.example.musinsabackend.domain.Product;
 import org.example.musinsabackend.repository.ProductJpaRepository;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,16 @@ public class ProductService
     * @param categoryId 카테고리 아이디
     * @return 가격이 가장 낮은 상품
     */
-    public ProductPriceAndBrandNameDto getLowestPriceProductByCategoryId(Long categoryId)
+    public ProductInfoDto getLowestPriceProductByCategory(Category category)
     {
-        return productJpaRepository.findTopByCategoryOrderByPriceWithBrand(categoryId);
+        Optional<Product> product = productJpaRepository.findTopByCategoryOrderByPrice(category);
+        product.orElseThrow(() -> new IllegalArgumentException("해당 카테고리에 상품이 존재하지 않습니다."));
+
+        return new ProductInfoDto(
+            product.get().getBrand().getName(),
+            product.get().getPrice(),
+            category.getName()
+        );
     }
 
     /*
@@ -38,7 +47,7 @@ public class ProductService
     * 해당 브랜드의 모든 상품의 카테고리 이름과 가격 그리고 총액을 반환
     * @return 브랜드의 모든 상품의 합계 중 최저가인 브랜드의 카테고리와 상품의 가격 및 총 합계
     */
-    public LowestBrandInfoDto getLowestPriceBrandByBrandId()
+    public Brand getLowestPriceBrandByBrandId()
     {
         return productJpaRepository.findTopBrandIdByBrandIdOrderByPrice().get();
     }
@@ -58,21 +67,16 @@ public class ProductService
     * @param categoryName 카테고리 이름
     * @return 카테고리 이름으로 조회한 모든 상품
     * */
-    public List<Product> getProductsByCategoryName(String categoryName)
-    {
-        return productJpaRepository.findByCategory_Name(categoryName).get();
-    }
-
     public ProductInfoWithBrandApiResponse getLowestPriceProductByCategoryName(String categoryName)
     {
         Optional<List<ProductPriceAndBrandNameDto>> lowestPriceProducts = productJpaRepository.findTopByCategoryNameOrderByPriceWithBrand(categoryName);
         Optional<List<ProductPriceAndBrandNameDto>> highestPriceProducts = productJpaRepository.findTopByCategoryNameOrderByPriceWithBrandDesc(categoryName);
 
-        ProductInfoWithBrandApiResponse response = new ProductInfoWithBrandApiResponse(
+        lowestPriceProducts.orElseThrow();
+        return new ProductInfoWithBrandApiResponse(
             categoryName,
             lowestPriceProducts.orElse(null),
             highestPriceProducts.orElse(null)
         );
-        return response;
     }
 }
