@@ -1,37 +1,49 @@
-import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import {styled} from '@mui/material/styles';
-import {Box, Button} from '@mui/material';
-import Layout from '../components/Layout';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import { Button, Box } from "@mui/material";
+import Layout from "../components/Layout";
 
 const StyledButton = styled(Button)(() => ({
   width: 200,
   height: 50,
-  border: '1px solid #000',
-  backgroundColor: '#fff',
+  border: "1px solid #000",
+  backgroundColor: "#fff",
   fontWeight: 600,
-  color: '#000',
-  '&:hover': {
-    color: '#fff',
-    backgroundColor: '#000',
-    border: '1px solid #000',
+  color: "#000",
+  "&:hover": {
+    color: "#fff",
+    backgroundColor: "#000",
+    border: "1px solid #000",
   },
 }));
 
 const MainPage = () => {
   const navigate = useNavigate();
 
-  const handleCategoryClick = () => {
-    navigate('/category');
-  }
+  const handleCategoryLowestClick = () => {
+    navigate("/category/lowest");
+  };
 
-  const handleCheapestProductClick = () => {
-    navigate('/cheapest');
-  }
+  const handleBrandLowestClick = () => {
+    navigate("/brand/lowest");
+  };
+
+  const handleCategoryHighLowClick = () => {
+    navigate("/category");
+  };
+
+  const handleAdminClick = () => {
+    navigate("/admin");
+  };
 
   return (
     <Layout>
-      <img src={`${process.env.PUBLIC_URL}/main.jpg`} alt="Example" style={{ width:'100%', height: '500px' }} />
+      <img
+        src={`${process.env.PUBLIC_URL}/main.jpg`}
+        alt="Example"
+        style={{ width: "100%", height: "500px" }}
+      />
       <Box
         display="flex"
         alignItems="center"
@@ -40,9 +52,18 @@ const MainPage = () => {
         gap={4}
         p={5}
       >
-        <StyledButton variant="outlined" onClick={handleCategoryClick}>카테고리 특가</StyledButton>
-        <StyledButton variant="outlined" onClick={handleCheapestProductClick}>최저가로 구매하기</StyledButton>
-        <StyledButton variant="outlined" onClick={handleCheapestProductClick}>어드민</StyledButton>
+        <StyledButton variant="outlined" onClick={handleCategoryLowestClick}>
+          카테고리 특가
+        </StyledButton>
+        <StyledButton variant="outlined" onClick={handleBrandLowestClick}>
+          최저가로 구매하기
+        </StyledButton>
+        <StyledButton variant="outlined" onClick={handleCategoryHighLowClick}>
+          가성비 & 가심비
+        </StyledButton>
+        <StyledButton variant="outlined" onClick={handleAdminClick}>
+          어드민
+        </StyledButton>
       </Box>
     </Layout>
   );

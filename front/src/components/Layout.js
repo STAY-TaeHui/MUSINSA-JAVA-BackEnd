@@ -1,16 +1,16 @@
-import React from 'react';
-import {styled} from '@mui/material/styles';
-import {AppBar, Box, Container, Typography} from '@mui/material';
+import React from "react";
+import { styled } from "@mui/material/styles";
+import { Container, Box, AppBar, Typography } from "@mui/material";
 
 const StyledAppBar = styled(AppBar)(() => ({
   height: 50,
-  backgroundColor: '#000'
+  backgroundColor: "#000",
 }));
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{border: '1px solid rgb(243, 243, 243)'}}>
+    <Container maxWidth="sm" height="100vh">
+      <Box minHeight="100vh" border="1px solid rgb(243, 243, 243)">
         <StyledAppBar position="static">
           <Box
             display="flex"
