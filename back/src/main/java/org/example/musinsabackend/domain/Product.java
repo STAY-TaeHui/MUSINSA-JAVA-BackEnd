@@ -12,7 +12,6 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.musinsabackend.domain.dto.ProductDto;
 
 @Entity
 @Getter
@@ -35,10 +34,6 @@ public class Product
     @Column(name = "product_price", nullable = false)
     private int price;
 
-    public ProductDto toDto()
-    {
-        return new ProductDto(id, price);
-    }
 
     public static Product createProduct(Brand brand, Category category, int price)
     {

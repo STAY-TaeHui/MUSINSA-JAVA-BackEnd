@@ -118,8 +118,8 @@ class ProductServiceTest
     @Transactional
     void createProduct_withValidData_returnsProductId() {
         CreateProductDto createProductDto = new CreateProductDto(1L, 1L, 2000);
-        when(brandService.findOne(createProductDto.getBrandId())).thenReturn(brand_mock);
-        when(categoryService.findOne(createProductDto.getCategoryId())).thenReturn(category_mock);
+        when(brandService.findEntity(createProductDto.getBrandId())).thenReturn(brand_mock);
+        when(categoryService.findEntity(createProductDto.getCategoryId())).thenReturn(category_mock);
         when(productJpaRepository.save(any(Product.class))).thenReturn(product_mock);
 
         Long createdProductId = productService.createProduct(createProductDto);
@@ -177,8 +177,8 @@ class ProductServiceTest
         Long productId = 1L;
         CreateProductDto dto = new CreateProductDto(1L, 1L, 2000);
         when(productJpaRepository.findById(productId)).thenReturn(Optional.of(product_mock));
-        when(brandService.findOne(dto.getBrandId())).thenReturn(brand_mock);
-        when(categoryService.findOne(dto.getCategoryId())).thenReturn(category_mock);
+        when(brandService.findEntity(dto.getBrandId())).thenReturn(brand_mock);
+        when(categoryService.findEntity(dto.getCategoryId())).thenReturn(category_mock);
 
         Long updatedProductId = productService.updateProduct(productId, dto);
 
