@@ -23,7 +23,13 @@ public class CategoryService
 
     }
 
-    public Category findOne(Long categoryId)
+    public CategoryDto findOne(Long categoryId)
+    {
+        Category category = categoryJpaRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+        return new CategoryDto(category);
+    }
+
+    public Category findEntity(Long categoryId)
     {
         return categoryJpaRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
     }

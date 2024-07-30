@@ -1,12 +1,29 @@
 package org.example.musinsabackend.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.example.musinsabackend.domain.Product;
+import org.example.musinsabackend.service.BrandDto;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@RequiredArgsConstructor
 public class ProductDto
 {
-    private final Long id;
-    private final int price;
+    private Long id;
+    private int price;
+
+    private BrandDto brand;
+
+    private CategoryDto category;
+
+    public ProductDto(Product product)
+    {
+        this.id = product.getId();
+        this.price = product.getPrice();
+
+        this.brand = new BrandDto(product.getBrand());
+        this.category = new CategoryDto(product.getCategory());
+    }
 }

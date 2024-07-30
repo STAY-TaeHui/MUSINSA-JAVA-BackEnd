@@ -1,11 +1,15 @@
 package org.example.musinsabackend.api;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.example.musinsabackend.api.response.ApiResponse;
 import org.example.musinsabackend.domain.dto.CreateProductDto;
+import org.example.musinsabackend.domain.dto.ProductDto;
 import org.example.musinsabackend.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +23,50 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductApiController
 {
     private final ProductService productService;
+
+    /*
+    * 전체 상품 조회 API
+    * */
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAllProducts()
+    {
+        ApiResponse apiResponse = new ApiResponse();
+        try
+        {
+            List<ProductDto> products = productService.findAll();
+            apiResponse.setData(products);
+            apiResponse.setMessage("Success");
+        }
+        catch (IllegalArgumentException e)
+        {
+            apiResponse.setMessage("Error : " + e.getMessage());
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /*
+    * 특정 상품  조회 API
+    * */
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getProduct(@PathVariable Long id)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+        try
+        {
+            ProductDto product = productService.findOne(id);
+            apiResponse.setData(product);
+            apiResponse.setMessage("Success");
+        }
+        catch (IllegalArgumentException e)
+        {
+            apiResponse.setMessage("Error : " + e.getMessage());
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        return ResponseEntity.ok(apiResponse);
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponse> createProduct(@RequestBody CreateProductDto dto)

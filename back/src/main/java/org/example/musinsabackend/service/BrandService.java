@@ -20,14 +20,22 @@ public class BrandService
         return brandJpaRepository.save(Brand.createBrand(createBrandDto)).getId();
     }
 
-    public Brand findOne(Long brandId)
+    public Brand findEntity(Long brandId)
     {
         return brandJpaRepository.findById(brandId).orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
     }
 
-    public List<Brand> getAllBrands()
+    public BrandDto findOne(Long brandId)
     {
-        return brandJpaRepository.findAll();
+        Brand brand = brandJpaRepository.findById(brandId).orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
+        return new BrandDto(brand);
+    }
+
+    public List<BrandDto> getAllBrands()
+    {
+        return brandJpaRepository.findAll().stream()
+            .map(BrandDto::new)
+            .toList();
     }
 
     public void deleteBrand(Long id)

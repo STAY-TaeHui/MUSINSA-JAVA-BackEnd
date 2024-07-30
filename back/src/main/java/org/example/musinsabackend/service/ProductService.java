@@ -11,6 +11,7 @@ import org.example.musinsabackend.domain.Brand;
 import org.example.musinsabackend.domain.Category;
 import org.example.musinsabackend.domain.Product;
 import org.example.musinsabackend.domain.dto.CreateProductDto;
+import org.example.musinsabackend.domain.dto.ProductDto;
 import org.example.musinsabackend.repository.ProductJpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,15 @@ public class ProductService
         return productJpaRepository.findAll();
     }
 
-    public Product findOne(Long id)
+    public Product findEntity(Long id)
     {
         return productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+    }
+
+    public ProductDto findOne(Long id)
+    {
+        Product product = productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+        return new ProductDto(product);
     }
 
     /*
@@ -84,8 +91,8 @@ public class ProductService
     * */
     public Long createProduct(CreateProductDto createProductDto)
     {
-        Brand brand = brandService.findOne(createProductDto.getBrandId());
-        Category category = categoryService.findOne(createProductDto.getCategoryId());
+        Brand brand = brandService.findEntity(createProductDto.getBrandId());
+        Category category = categoryService.findEntity(createProductDto.getCategoryId());
 
         Product savedProduct = productJpaRepository.save(
             Product.createProduct(brand, category, createProductDto.getPrice())
@@ -118,11 +125,18 @@ public class ProductService
     {
         Product product = productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 
-        Brand brand = brandService.findOne(dto.getBrandId());
-        Category category = categoryService.findOne(dto.getCategoryId());
+        Brand brand = brandService.findEntity(dto.getBrandId());
+        Category category = categoryService.findEntity(dto.getCategoryId());
 
         product.updateProduct(brand, category, dto.getPrice());
 
         return product.getId();
+    }
+
+    public List<ProductDto> findAll()
+    {
+        return productJpaRepository.findAll().stream()
+            .map(ProductDto::new)
+            .toList();
     }
 }

@@ -205,7 +205,7 @@ class ProductServiceTest
         when(productJpaRepository.findById(productId)).thenReturn(Optional.of(product_mock));
         when(product_mock.getBrand()).thenReturn(brand_mock);
 
-        Product product = productService.findOne(productId);
+        Product product = productService.findEntity(productId);
 
         assertThat(product).isNotNull();
         assertThat(product.getBrand().getName()).isEqualTo(brand_mock.getName());
