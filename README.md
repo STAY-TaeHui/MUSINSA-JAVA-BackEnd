@@ -74,7 +74,16 @@
     ```shell
     java -jar build/libs/musinsa-java-0.0.1-SNAPSHOT.jar
     ```
+## Front
+1. front 폴더로 이동
+2. node 설치되어있는지 확인. `node -v`  18버전 사용 
+3. node 설치 되어있다면 `npm install`로 관련 패키지 설치
+4. `npm start`로 front 실행
+
 
 # 테스트
 
 # 기타
+- JAVA : 17 
+- SpringBoot Framwork : 3.3.2 
+- Node.js : 18.20.4
