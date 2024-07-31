@@ -14,6 +14,7 @@ import org.example.musinsabackend.domain.dto.CreateProductDto;
 import org.example.musinsabackend.domain.dto.ProductDto;
 import org.example.musinsabackend.repository.ProductJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -121,6 +122,7 @@ public class ProductService
     * @param dto 수정할 상품 정보
     * @return 수정된 상품의 아이디
     * */
+    @Transactional
     public Long updateProduct(Long id, CreateProductDto dto)
     {
         Product product = productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));

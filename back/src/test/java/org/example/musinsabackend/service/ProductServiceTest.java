@@ -124,7 +124,7 @@ class ProductServiceTest
 
         Long createdProductId = productService.createProduct(createProductDto);
 
-        assertThat(createdProductId).isEqualTo(product_mock.getId());
+        assertThat(createdProductId).isEqualTo(73L);
     }
 
     @DisplayName("상품 생성 테스트 - 존재하지 않는 브랜드 ID")

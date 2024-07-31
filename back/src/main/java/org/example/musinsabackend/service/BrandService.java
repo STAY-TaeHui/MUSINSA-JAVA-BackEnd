@@ -8,6 +8,7 @@ import org.example.musinsabackend.domain.dto.CreateBrandDto;
 import org.example.musinsabackend.domain.dto.UpdateBrandDto;
 import org.example.musinsabackend.repository.BrandJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,7 @@ public class BrandService
         brandJpaRepository.deleteById(id);
     }
 
+    @Transactional
     public Long updateBrand(Long id, UpdateBrandDto dto)
     {
         Brand brand = brandJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 브랜드가 존재하지 않습니다."));
