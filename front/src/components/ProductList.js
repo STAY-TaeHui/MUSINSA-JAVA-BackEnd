@@ -22,9 +22,10 @@ const ProductList = ({ dataList, fixedWidth }) => {
       width="100%"
       gap={2}
     >
-      {dataList.map((data) => {
+      {dataList?.map((data, index) => {
         return (
           <ProductItem
+            key={`product_${index}`}
             brandName={data.brandName}
             categoryName={data.categoryName}
             price={data.price}

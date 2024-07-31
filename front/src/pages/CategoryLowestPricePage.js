@@ -1,35 +1,10 @@
-import React, {useEffect, useState} from "react";
-import { Box, Typography } from "@mui/material";
+import React from "react";
+import { Box, Typography, Button} from "@mui/material";
 import Layout from "../components/Layout";
 import ProductList from "../components/ProductList";
-import { styled } from "@mui/material/styles";
-import { Button } from "@mui/material";
+import {styled} from "@mui/material/styles";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
-import axios from "axios";
-
-const mock = {
-  data: {
-    productInfos: [
-      {
-        categoryName: "상의",
-        brandName: "C",
-        price: 10000,
-      },
-      {
-        categoryName: "아우터",
-        brandName: "E",
-        price: 5000,
-      },
-      // {
-      //   categoryName: "바지",
-      //   brandName: "D",
-      //   price: 3000,
-      // },
-    ],
-    totalPrice: 34100,
-  },
-};
 
 const StyledButton = styled(Button)(() => ({
   border: "1px solid #000",
@@ -43,19 +18,8 @@ const StyledButton = styled(Button)(() => ({
 }));
 
 const CategoryLowestPricePage = () => {
-  // const { data } = useSWR("/api/reports/categories/lowest-price", fetcher);
-  //
-  // console.log(data);
-
-  // const categories = data ? data.productInfos.map((item) => item.categoryName) : [];
-  const [ dataList, setDataList ] = useState([]);
-  const categories = [];
-
-  useEffect(() => {
-    axios.get("/api/reports/categories/lowest-price").then((response) => {
-      console.log(response);
-    });
-  }, []);
+  const { data: categories } = useSWR("/api/categories", fetcher);
+  const { data, isLoading } = useSWR("/api/reports/categories/lowest-price", fetcher);
 
   return (
     <Layout>
@@ -67,16 +31,18 @@ const CategoryLowestPricePage = () => {
         p={2}
       >
         <Typography>카테고리 특가🛍️</Typography>
-        <Box display="flex" gap={1}>
-          {categories.map((categoryName) => {
-            return (
-              <StyledButton variant="outlined" size="small">
-                {categoryName}
-              </StyledButton>
-            );
-          })}
-        </Box>
-        <ProductList dataList={dataList || []} />
+        {categories &&
+          <Box display="flex" gap={1} flexWrap={"wrap"}>
+            {categories.map((category) => {
+              return (
+                <StyledButton key={category.id} variant="outlined" size="small">
+                  {category.name}
+                </StyledButton>
+              );
+            })}
+          </Box>
+        }
+        <ProductList dataList={isLoading ? [] : data.productInfos} fixedWidth={true} />
       </Box>
     </Layout>
   );
